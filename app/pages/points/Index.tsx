@@ -15,7 +15,7 @@ export default function PointsIndex() {
     const path = pathObject.href;
     if (path && path === "/perp") {
       const symbol = getSymbol();
-      navigate(`perp/${symbol}`);
+      navigate(`/perp/${symbol}`);
     }
   };
 
