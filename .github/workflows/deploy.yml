@@ -106,9 +106,17 @@ jobs:
             fi
           fi
 
+          # Non-mainnet template lines (qa/testnet): on merge conflicts, prefer upstream hunks.
+          # mainnet and fallback-to-main merges stay default (manual resolution if conflict).
+          MERGE_EXTRA=""
+          if [ "$UPSTREAM_BRANCH" = "qa" ] || [ "$UPSTREAM_BRANCH" = "testnet" ]; then
+            MERGE_EXTRA="-X theirs"
+            echo "Merging upstream/$UPSTREAM_BRANCH with -X theirs (conflicted hunks favor upstream)"
+          fi
+
           BEFORE_MERGE=$(git rev-parse HEAD)
 
-          if git merge upstream/$UPSTREAM_BRANCH --no-edit; then
+          if git merge "upstream/$UPSTREAM_BRANCH" --no-edit $MERGE_EXTRA; then
             AFTER_MERGE=$(git rev-parse HEAD)
             
             if [ "$BEFORE_MERGE" != "$AFTER_MERGE" ]; then
